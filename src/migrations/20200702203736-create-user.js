@@ -8,23 +8,24 @@ module.exports = {
     },
     firstName: {
       type: Sequelize.STRING,
-      required: true
+      allowNull: false
     },
     lastName: {
       type: Sequelize.STRING,
-      required: true
+      allowNull: false
     },
     email: {
       type: Sequelize.STRING,
-      required: true
+      allowNull: false,
+      unique: true
     },
     password: {
       type: Sequelize.STRING,
-      required: true
+      allowNull: false
     },
     isAdmin: {
       type: Sequelize.BOOLEAN,
-      required: true
+      allowNull: false
     },
     createdAt: {
       allowNull: false,

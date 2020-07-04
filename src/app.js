@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import env from 'dotenv';
 import userRoute from './routes/user.route';
+import fundingRoute from './routes/funding.route';
 
 env.config();
 const port = process.env.PORT || 3000;
@@ -33,6 +34,7 @@ app.use(cookieParser());
 
 // Routes here
 app.use('/api/v1/', userRoute);
+app.use('/api/v1/', fundingRoute);
 
 app.get('/', (req, res) => {
   res.send(`<h1>Welcome to the ----- Application</h1>

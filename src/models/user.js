@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
       required: true,
+      validate: {
+        isEmail: {
+          msg: 'Email field must be an email.',
+        },
+      },
     },
     password: {
       type: DataTypes.STRING,
@@ -29,18 +34,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
       required: true
     }
   }, {});
   User.associate = (models) => {
-    User.hasMany(models.Transactions, {
+    User.hasMany(models.Transaction, {
       foreignKey: 'id',
-      as: 'userId',
+      as: 'transactionId',
     });
 
     User.hasOne(models.Wallet, {
       foreignKey: 'id',
-      as: 'userId'
+      as: 'walletId'
     });
 
     User.beforeCreate(async (newUser) => {

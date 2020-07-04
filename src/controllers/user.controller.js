@@ -25,32 +25,20 @@ class UserController {
    * @member UserController
    */
   static async createUser(req, res) {
-    let token;
     let newUser;
     const body = pickModelAttibutes(User, req.body);
     try {
       const user = await User.create({
         ...body
       });
-      token = generateToken({
-        id: user.id,
-        isAdmin: user.isAdmin
-      });
       newUser = pickUser(user.dataValues);
     } catch (e) {
-      if (e.name.startsWith('Sequelize') && e.errors.length) {
-        const error = e.errors.shift();
-        return handleErrorResponse(res, error.message, 400);
+      if (e.original.code === '23505') {
+        return handleErrorResponse(res, e.original.detail, 403);
       }
       return handleErrorResponse(res, e, 500);
     }
-    return handleSuccessResponse(
-      res, {
-        ...newUser,
-        token,
-      },
-      201
-    );
+    return handleSuccessResponse(res, newUser, 201);
   }
 
   /**
@@ -79,16 +67,13 @@ class UserController {
         const error = 'This email does not exist';
         return handleErrorResponse(res, error, 404);
       }
-
-      // Compare password with what's stored in the database
       const isMatch = comparePassword(password, isUser.password);
       if (!isMatch) {
         return handleErrorResponse(res, 'Wrong Password', 401);
       }
-
-      // Generate token
       const token = generateToken({
         id: isUser.id,
+        isAdmin: isUser.isAdmin
       });
 
       res.cookie('access_token', token, {
@@ -102,12 +87,12 @@ class UserController {
         status: 'success',
         message: `Welcome ${isUser.firstName}`,
         data: {
-          token,
           userId: isUser.id,
           firstName: isUser.firstName,
           lastName: isUser.lastName,
           email: isUser.email,
         },
+        token,
       });
     } catch (error) {
       return handleErrorResponse(res, error.message, 500);
