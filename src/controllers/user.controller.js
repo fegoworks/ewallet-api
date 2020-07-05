@@ -73,6 +73,7 @@ class UserController {
       }
       const token = generateToken({
         id: isUser.id,
+        email: isUser.email,
         isAdmin: isUser.isAdmin
       });
 
