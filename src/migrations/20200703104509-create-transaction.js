@@ -1,13 +1,26 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Transactions', {
     id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      type: Sequelize.UUID,
+      unique: true,
     },
-    name: {
-      type: Sequelize.STRING
+    accountNumber: {
+      type: Sequelize.DOUBLE,
+      required: true,
+    },
+    amount: {
+      type: Sequelize.DOUBLE,
+      required: true,
+    },
+    type: {
+      type: Sequelize.ENUM(['transfer', 'debit', 'funding']),
+      required: true
+    },
+    narration: {
+      type: Sequelize.STRING,
+      required: true
     },
     createdAt: {
       allowNull: false,

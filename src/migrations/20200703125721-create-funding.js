@@ -21,10 +21,6 @@ module.exports = {
       type: Sequelize.DOUBLE,
       allowNull: false,
     },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
     reference: {
       type: Sequelize.STRING,
       allowNull: false,

@@ -25,7 +25,7 @@ class FundingController {
   static async fundAccount(req, res) {
     try {
       const customerId = req.id;
-      const funding = await fundingService(customerId, req.body);
+      const funding = await fundingService(customerId, req.email, req.body);
       return handleSuccessResponse(res, funding);
     } catch (error) {
       return handleErrorResponse(res, error, 500);

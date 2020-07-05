@@ -14,19 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       required: true,
     },
-    email: {
-      type: DataTypes.STRING,
-      required: true,
-    },
     reference: {
       type: DataTypes.STRING,
       required: true,
-    }
+    },
   }, {});
   Funding.associate = (models) => {
-    Funding.hasMany(models.Transaction, {
-      foreignKey: 'transactionId',
-    });
     Funding.belongsTo(models.User, {
       foreignKey: 'customerId',
     });

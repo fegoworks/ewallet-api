@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = 'https://api.paystack.co/charge';
 
-const initiatePayment = async (request) => {
+const initiatePayment = async (email, request) => {
   const data = {
     method: 'post',
     url: BASE_URL,
@@ -10,7 +10,7 @@ const initiatePayment = async (request) => {
       Authorization: `BEARER ${process.env.PAYSTACK_API_KEY}`
     },
     data: {
-      email: request.email,
+      email,
       amount: request.amount,
       card: {
         number: request.number,
