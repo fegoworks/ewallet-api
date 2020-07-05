@@ -3,12 +3,12 @@ module.exports = {
     id: {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
-      required: true,
+      allowNull: false,
       primaryKey: true
     },
     customerId: {
       type: Sequelize.UUID,
-      required: true,
+      allowNull: false,
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
       references: {
@@ -17,13 +17,26 @@ module.exports = {
         as: 'customerId'
       }
     },
+    accountNumber: {
+      type: Sequelize.DOUBLE,
+      allowNull: false,
+      unique: true
+    },
     balance: {
       type: Sequelize.DOUBLE,
-      required: true,
+      allowNull: false,
     },
     type: {
       type: Sequelize.ENUM(['customer', 'company']),
-      required: true
+      allowNull: false
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE
     }
   }),
   down: (queryInterface, Sequelize) => queryInterface.dropTable('Wallets')
