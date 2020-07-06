@@ -2,4 +2,4 @@
 
 # Ewallet API
 
-[![Build Status](https://travis-ci.org/fegoworks/ewallet-api.svg?branch=develop)](https://travis-ci.org/fegoworks/ewallet-api)
+![CI](https://github.com/fegoworks/ewallet-api/workflows/CI/badge.svg)
