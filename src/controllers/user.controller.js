@@ -1,14 +1,17 @@
-/* eslint-disable indent */
-import {
-  User
-} from '../models';
+/**
+ * /* eslint-disable indent
+ *
+ * @format
+ */
+
+import { User } from '../models';
 import {
   generateToken,
   handleErrorResponse,
   handleSuccessResponse,
   pickModelAttibutes,
   comparePassword,
-  pickUser
+  pickUser,
 } from '../helpers/utils';
 
 /**
@@ -29,12 +32,12 @@ class UserController {
     const body = pickModelAttibutes(User, req.body);
     try {
       const user = await User.create({
-        ...body
+        ...body,
       });
       newUser = pickUser(user.dataValues);
     } catch (e) {
       if (e.original.code === '23505') {
-        return handleErrorResponse(res, e.original.detail, 403);
+        return handleErrorResponse(res, e.original.detail, 409);
       }
       return handleErrorResponse(res, e, 500);
     }
@@ -51,10 +54,7 @@ class UserController {
    */
   static async signIn(req, res) {
     try {
-      const {
-        email,
-        password
-      } = req.body;
+      const { email, password } = req.body;
 
       // Check if email exists
       const isUser = await User.findOne({
@@ -74,7 +74,7 @@ class UserController {
       const token = generateToken({
         id: isUser.id,
         email: isUser.email,
-        isAdmin: isUser.isAdmin
+        isAdmin: isUser.isAdmin,
       });
 
       res.cookie('access_token', token, {
