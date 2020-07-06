@@ -2,4 +2,4 @@
 
 # Ewallet API
 
-![CI](https://github.com/fegoworks/ewallet-api/workflows/CI/badge.svg)
+[![CI](https://github.com/fegoworks/ewallet-api/workflows/CI/badge.svg)](https://github.com/fegoworks/ewallet-api/actions)
