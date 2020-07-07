@@ -1,8 +1,9 @@
 <!-- @format -->
 
-# Ewallet API
+# eWallet API
 
-<<<<<<< HEAD
+[![CI](https://github.com/fegoworks/ewallet-api/workflows/CI/badge.svg)](https://github.com/fegoworks/ewallet-api/actions)
+
 A simple wallet REST API to allow customers pre-load their wallet from their Debit cards and transfer virtual money as a gift to other customers within the platform
 <br />
 <br />
@@ -71,6 +72,3 @@ For more details contact fegoworks@hotmail.com
 
 For any suggestions or contributions or issues please do raise them or email me.
 For **Contributions**, Please clone the repo and implement a PR I would appreciate it
-=======
-[![CI](https://github.com/fegoworks/ewallet-api/workflows/CI/badge.svg)](https://github.com/fegoworks/ewallet-api/actions)
->>>>>>> d2f2e393f7247b7c5cef052fc392fc3b13eea35f
