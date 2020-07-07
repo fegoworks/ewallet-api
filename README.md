@@ -22,7 +22,7 @@ A simple wallet REST API to allow customers pre-load their wallet from their Deb
 
 ## Getting Started
 
-This is a backend javascript application built with [**Node JS**](https://nodejs.org/en/) using [**Express**](https://expressjs.com/) framework. The application runs with Redis server and Express Session for security and validation of users.
+This is a backend javascript application built with [**Node JS**](https://nodejs.org/en/) using [**Express**](https://expressjs.com/) framework. The application runs on a PostgreSQL database and is live on heroku -[ewallet-api](https://ewallet-api-fe.herokuapp.com/)
 
 ## Technology Stack
 
@@ -30,6 +30,8 @@ This is a backend javascript application built with [**Node JS**](https://nodejs
 
 1. NodeJS
 2. Express FrameWork
+3. PostgreSQL
+4. Sequelize
 
 ## Installation
 
@@ -38,7 +40,7 @@ This is a backend javascript application built with [**Node JS**](https://nodejs
 2. Clone the [**repository here**](https://github.com/fegoworks/ewallet-api)
 3. [**cd**] into the root of the **project directory**.
 4. Run `npm install` on the terminal to install project dependecies
-5. Create a `.env` file in the root directory of the application. Example of the content of a .env file is shown in the .env.sample
+5. Create a `.env` file in the root directory of the application. Example of the content of a `.env` file is shown in the `.env.sample`
 
 6. Start the application:
    **_Different Build Environments_**

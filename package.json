@@ -1,5 +1,5 @@
 {
-  "name": "express-babel-setup-template",
+  "name": "ewallet-api",
   "version": "1.0.0",
   "description": "Express-Babel-Setup - A simple express startoff template setup with babel, eslint, sequelize",
   "main": "index.js",
@@ -17,8 +17,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fegoworks/express-babel-setup-template.git"
+    "url": "git+https://github.com/fegoworks/ewallet-api.git"
   },
+  "keywords": [
+    "express",
+    "node",
+    "node.js",
+    "postgres",
+    "postgresql",
+    "es6",
+    "es7",
+    "es8",
+    "es2017",
+    "mocha",
+    "istanbul",
+    "nyc",
+    "eslint",
+    "codecov",
+    "REST",
+    "API",
+    "ewallet"
+  ],
   "author": "Edafe Oghenefego",
   "license": "ISC",
   "bugs": {
