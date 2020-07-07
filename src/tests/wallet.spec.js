@@ -16,9 +16,29 @@ import {
 const sandbox = sinon.createSandbox();
 
 describe('Wallets API', async () => {
-  let accessToken;
-  let card;
-  let wallets;
+  let card, accessToken, wallets, customers;
+
+  before(async () => {
+    customers = {
+      one: {
+        id: '6f3f2422-5394-41e2-a1ba-1a62d16bfc59',
+        firstName: 'feggie',
+        lastName: 'edafe',
+        email: 'feggie@mail.com',
+        password: 'password',
+        isAdmin: false,
+      },
+      two: {
+        id: '65863249-4600-4dd6-b601-7e1947b51bc8',
+        firstName: 'feggie',
+        lastName: 'edafe',
+        email: 'fego@mail.com',
+        password: 'password',
+      },
+    };
+    await User.create(customers.one);
+    await User.create(customers.two);
+  });
 
   beforeEach(async () => {
     card = {
@@ -26,52 +46,31 @@ describe('Wallets API', async () => {
       cvv: '408',
       number: '4084084084084081',
       expiry_month: '01',
-      expiry_year: '2099'
+      expiry_year: '2099',
     };
-    const customers = {
-      one: {
-        id: '6f3f2422-5394-41e2-a1ba-1a62d16bfc59',
-        firstName: 'feggie',
-        lastName: 'edafe',
-        email: 'feggie@mail.com',
-        password: 'password',
-        isAdmin: false
-      },
-      two: {
-        id: '65863249-4600-4dd6-b601-7e1947b51bc8',
-        firstName: 'feggie',
-        lastName: 'edafe',
-        email: 'fego@mail.com',
-        password: 'password'
-      }
-    };
+
     wallets = {
       one: {
         id: '1ec9a90e-dd68-4171-9c4c-e00ca0da5be3',
         customerId: '6f3f2422-5394-41e2-a1ba-1a62d16bfc59',
         accountNumber: 12345678,
-        balance: 20000
+        balance: 2000000,
       },
       two: {
         id: '99586612-b7d3-48dc-8831-2405b1766600',
         customerId: '65863249-4600-4dd6-b601-7e1947b51bc8',
         accountNumber: 67899443,
-        balance: 20000
-      }
+        balance: 1500000,
+      },
     };
-    await User.destroy({
-      truncate: {
-        cascade: true
-      }
-    });
+
     await Wallet.destroy({
       truncate: {
-        cascade: true
-      }
+        cascade: true,
+      },
     });
-
-    await User.create(customers.one);
-    await User.create(customers.two);
+    await Wallet.create(wallets.one);
+    await Wallet.create(wallets.two);
 
     accessToken = generateToken(customers.one);
   });
@@ -107,7 +106,9 @@ describe('Wallets API', async () => {
         .send(card)
         .then((response) => {
           expect(response.status).to.equal(400);
-          expect(response.body.error).to.equal('Enter a valid card number string');
+          expect(response.body.error).to.equal(
+            'Enter a valid card number string'
+          );
         });
     });
     it('should not fund the wallet if cvv is missing', () => {
@@ -143,5 +144,97 @@ describe('Wallets API', async () => {
           expect(response.body.error).to.equal('Enter an expiry year');
         });
     });
+  });
+
+  // Transfer
+
+  describe('POST /api/v1/wallets/transfer', () => {
+    it('should transfer between wallets if credentials are correct', () => request(app)
+      .post('/api/v1/wallets/transfer')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        amount: 55000,
+        accountNumber: 67899443,
+      })
+      .then((response) => {
+        expect(response.status).to.equal(201);
+        expect(response.body.data).to.be.an('object');
+      }));
+
+    it('should return an error if account number is missing', () => request(app)
+      .post('/api/v1/wallets/transfer')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        amount: 55000,
+        accountNumber: '',
+      })
+      .then((response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Enter a valid account number');
+      }));
+
+    it('should return an error if amount is missing', () => request(app)
+      .post('/api/v1/wallets/transfer')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        amount: '',
+        accountNumber: 67899443,
+      })
+      .then((response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Please enter amount');
+      }));
+
+    it('should return an error if account number does not exist', () => request(app)
+      .post('/api/v1/wallets/transfer')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        amount: 500000,
+        accountNumber: 678994435,
+      })
+      .then((response) => {
+        expect(response.status).to.equal(500);
+      }));
+  });
+
+  // Get wallet details
+  describe('GET /api/v1/wallets/:customerId', () => {
+    it('should return wallet if credentials are correct', () => request(app)
+      .get('/api/v1/wallets/6f3f2422-5394-41e2-a1ba-1a62d16bfc59')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+      .then((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body.data).to.be.an('object');
+      }));
+
+    it('should not return wallet if credentials are not correct', () => request(app)
+      .get('/api/v1/wallets/6f3f2422-5394-41e2-a1ba-1a62d16bfc59')
+      .set('Authorization', 'Bearer ')
+      .send()
+      .then((response) => {
+        expect(response.status).to.equal(500);
+        expect(response.body.error).to.equal('Failed to authenticate token.');
+      }));
+  });
+  //  Transactions
+  describe('GET /api/v1/transactions/:accountNumber', () => {
+    it('should return wallet transactios if credentials are correct', () => request(app)
+      .get('/api/v1/transactions/12345678')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+      .then((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body.data).to.be.an('array');
+      }));
+
+    it('should not return wallet transactions if user  is not signed in', () => request(app)
+      .get('/api/v1/transactions/12345678')
+      .set('Authorization', 'Bearer ')
+      .send()
+      .then((response) => {
+        expect(response.status).to.equal(500);
+        expect(response.body.error).to.equal('Failed to authenticate token.');
+      }));
   });
 });
