@@ -1,0 +1,218 @@
+FORMAT: 1A
+HOST: https://polls.apiblueprint.org/
+
+# eWallet
+
+eWallet is a simple REST API to allow customers pre-load their wallet from their Debit cards and transfer virtual money as a gift to other customers within the platform
+
+# Authentication Sign up [/api/v1/auth/create-user]
+
+## Sign Up [POST ]
+
+Sign Up to the Application takes a JSON object containing user credentials
+
++ Request (application/json)
+
+            {
+                "firstName": "fego",
+                "lastName": "edafe",
+                "email": "fego@mail.com",
+                "password": "password",
+            }
+            
++ Response 201 (application/json)
+    + Headers
+        Cookie: sid
+    
+    + body
+
+            {
+                "status": "success",
+                "data": {                        
+                            "id": "4d21f615-54b6-466f-a96d-cd486af02fec",
+                            "firstName": "fego",
+                            "lastName": "edafe",
+                            "email": "fego@mail.com",
+                            "updatedAt": "2020-07-06T23:40:30.417Z",
+                            "createdAt": "2020-07-06T23:40:30.417Z"
+                        }
+            }
+    
+# Authentication Sign In [/api/v1/auth/signin]    
+
+### Sign in [POST]
+
+Sign In to the Application takes a JSON object containing user credentials
+
++ Request (application/json)
+
+            {
+                "email": "fego@mail.com",
+                "password": "password",
+            }
++ response 200 (application/json)
+    + Headers
+        Cookie: sid
+    
+    + body
+            {
+                "status": "success",
+                "message": "Welcome fego",
+                "data": {
+                            "userId": "4d21f615-54b6-466f-a96d-cd486af02fec",
+                            "firstName": "fego",
+                            "lastName": "edafe",
+                            "email": "fego@mail.com"
+                        },
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRkMjFmNjE1LTU0YjYtNDY2Zi1hOTZkLWNkNDg2YWYwMmZlYyIsImVtYWlsIjoiZmVnb0BtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE1OTQwNzk0OTIsImV4cCI6MTU5NDA4NjY5Mn0.5qi2mRRhNiYv83z7IZxENv__bpcXmjkEQlssLT9hOzc"
+            }
+    
+# Fund Account [/api/v1/fundAccount]
+
+### Fund [POST]
+Fund Account takes a JSON object containing debit card details. Funding an account automatically creates a wallet
+
++ Request (application/json)
+
+            {
+                "amount": "15500000",
+                "cvv": "408",
+                "number": "4084084084084081",
+                "expiry_month": "01",
+                "expiry_year": "2099"
+            }
+
++ Response 201 (application/json)
+    + Headers
+    
+        Cookie: sid
+        
+    + body
+    
+            {
+                "status": "success",
+                "data": {
+                    "id": "21a762f0-c9b7-479f-aa17-e594d3af750e",
+                    "customerId": "4d21f615-54b6-466f-a96d-cd486af02fec",
+                    "amount": 15500000,
+                    "reference": "3cdyxkqziq54u4h",
+                    "updatedAt": "2020-07-07T00:01:01.975Z",
+                    "createdAt": "2020-07-07T00:01:01.975Z"
+                }
+            }
+            
+# Get Wallet Details [/api/v1/wallets/:customerId]
+
+### Wallet [GET]
+This returns a JSON object containing the wallet accountNumber and other details. A wallet is generated only after the initial deposit from a debit card.
+
++ Request (application/json)
+
+    + Headers
+    
+    
++ Response 200 (application/json)
+    
+    + Headers
+    
+        Cookie: sid
+        
+    + body
+            {
+                "status": "success",
+                "data": {
+                    "id": "3a419291-2c93-41f0-b296-6866b8133375",
+                    "customerId": "441a9684-6640-4b98-a5c4-121b144b8363",
+                    "accountNumber": 27513619,
+                    "balance": 15500000,
+                    "type": "customer",
+                    "createdAt": "2020-07-07T00:12:19.677Z",
+                    "updatedAt": "2020-07-07T00:12:19.677Z"
+                }
+            }
+        
+# Transfer to another wallet [/api/v1/wallets/transfer]
+
+### Transfer [POST]
+Transfer takes a JSON object containing the amount in kobo and the receiving account number. 
+
++ Request (application/json)
+
+            {
+                "amount": "15500000",
+                "accountNumber": "4084084",
+            }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+        Cookie: sid
+        
+    + body
+        
+             {
+                "status": "success",
+                "data": {
+                    "transaction": {
+                        "id": "cf49c7e5-f92a-48eb-80f9-ea82f7efd382",
+                        "amount": -110000,
+                        "accountNumber": 97365121,
+                        "narration": "transfer_to_account: 27513619",
+                        "type": "transfer",
+                        "updatedAt": "2020-07-07T00:13:47.834Z",
+                        "createdAt": "2020-07-07T00:13:47.834Z"
+                    },
+                    "wallet": {
+                        "id": "537a5bb1-3c72-4882-913a-5a77e542e453",
+                        "customerId": "4d21f615-54b6-466f-a96d-cd486af02fec",
+                        "accountNumber": 97365121,
+                        "balance": 15390000,
+                        "type": "customer",
+                        "createdAt": "2020-07-07T00:01:02.205Z",
+                        "updatedAt": "2020-07-07T00:13:47.737Z"
+                    }
+                }
+            }
+            
+# Get Wallet Transactions [/api/v1/transactions/:accountNumber]
+
+### Wallet [GET]
+This returns a JSON object containing all transactions associated with the wallet. 
+
++ Request (application/json)
+
+    + Headers
+    
+    
++ Response 200 (application/json) 
+
+    + Headers
+    
+        Cookie: sid
+
+    + body
+    
+            {
+                "status": "success",
+                "data": [
+                    {
+                        "id": "cad6e56e-513d-4bb7-a576-726c44922dde",
+                        "accountNumber": 27513619,
+                        "amount": 15500000,
+                        "type": "funding",
+                        "narration": "fund_account_wallet: 27513619",
+                        "createdAt": "2020-07-07T00:12:19.686Z",
+                        "updatedAt": "2020-07-07T00:12:19.686Z"
+                    },
+                    {
+                        "id": "a5816c03-b824-42f8-8420-0255deaf4a0d",
+                        "accountNumber": 27513619,
+                        "amount": 110000,
+                        "type": "transfer",
+                        "narration": "transfer_from_account: 97365121",
+                        "createdAt": "2020-07-07T00:13:47.842Z",
+                        "updatedAt": "2020-07-07T00:13:47.842Z"
+                    }
+                ]
+            }
