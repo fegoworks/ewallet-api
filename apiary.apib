@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://ewallet-api-fe.herokuapp.com/
 
 # eWallet
 
@@ -104,6 +104,11 @@ Fund Account takes a JSON object containing debit card details. Funding an accou
 # Get Wallet Details [/api/v1/wallets/:customerId]
 
 ### Wallet [GET]
+
++ parameters
+
+    + customerId
+    
 This returns a JSON object containing the wallet accountNumber and other details. A wallet is generated only after the initial deposit from a debit card.
 
 + Request (application/json)
@@ -178,6 +183,10 @@ Transfer takes a JSON object containing the amount in kobo and the receiving acc
 # Get Wallet Transactions [/api/v1/transactions/:accountNumber]
 
 ### Wallet [GET]
++ parameters
+
+    + accountNumber
+
 This returns a JSON object containing all transactions associated with the wallet. 
 
 + Request (application/json)
